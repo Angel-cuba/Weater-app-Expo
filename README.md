@@ -1,1 +1,1 @@
-# Weather app usin Expo-cli
+# Weather app using Expo-cli
