@@ -1,16 +1,43 @@
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import React from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import CustomCity from './Custom/CustomCity';
 
 const City = ({ cities }) => {
+  const [cityId, setCityId] = React.useState(null);
+
+  const citiesToKeep = cities.map((c) => {
+    return {
+      id: c.id,
+      name: c.name,
+      country: c.country,
+      adminArea: c.adminArea,
+    };
+  });
+  console.log('citiesToKeep', citiesToKeep);
+  const filteredCities = citiesToKeep.filter((c) => c.id === cityId);
+  console.log('filteredCities', filteredCities);
+
+  const addToLocalStorage = async () => {
+    const myCities = JSON.parse(await AsyncStorage.getItem('citiesToKeep')) || [];
+    myCities.push(filteredCities);
+    await AsyncStorage.setItem('citiesToKeep', JSON.stringify(myCities));
+    console.log('id', cityId);
+  };
+  React.useEffect(() => {
+    addToLocalStorage();
+  }, [cityId]);
+
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.scroll}>
-      {cities.map((city) => {
+      {cities.map((item) => {
         return (
-          <View key={city.id} style={styles.cityItem}>
-            <Text style={styles.cityName}>{city.name}</Text>
-            <Text style={styles.cityCountry}>{city.country}</Text>
-            <Text style={styles.cityAdmin}>{city.adminArea}</Text>
-          </View>
+          <CustomCity
+            key={item.id}
+            item={item}
+            addToLocalStorage={addToLocalStorage}
+            setCityId={setCityId}
+          />
         );
       })}
     </ScrollView>
@@ -45,6 +72,4 @@ const styles = StyleSheet.create({
     fontSize: 15,
     alignSelf: 'flex-end',
   },
-
-
-  })
+});
