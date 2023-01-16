@@ -7,6 +7,7 @@ import City from './City';
 
 const ModalScreen = ({ modalVisible, setModalVisible }) => {
   const [search, setSearch] = React.useState('');
+
   const [cities, setCities] = React.useState(null);
 
   React.useEffect(() => {
@@ -22,11 +23,7 @@ const ModalScreen = ({ modalVisible, setModalVisible }) => {
 
   return (
     <View style={styles.centeredView}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-      >
+      <Modal animationType="slide" transparent={true} visible={modalVisible}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>Write your city name</Text>
@@ -38,6 +35,7 @@ const ModalScreen = ({ modalVisible, setModalVisible }) => {
                 radius={40}
                 onPress={() => setModalVisible(false)}
                 fontSize={20}
+                backgroundColor="#15F528"
               />
             </View>
           </View>
