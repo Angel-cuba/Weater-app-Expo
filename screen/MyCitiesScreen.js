@@ -1,23 +1,107 @@
-import { View, Text, StyleSheet, Pressable, Modal, Alert } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Modal, Alert, ScrollView } from 'react-native';
 import React, { useState } from 'react';
 import CustomButton from '../components/Custom/CustomButton';
 import ModalScreen from '../components/Modal';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { stylesCity } from '../components/Custom/CustomCity';
 
 const MyCitiesScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [citiesFromStorage, setCitiesFromStorage] = useState(null);
 
   const addCity = () => {
     setModalVisible(!modalVisible);
   };
+
+  const removeAllCities = () => {
+    AsyncStorage.removeItem('citiesToKeep');
+    setCitiesFromStorage(null);
+  };
+
+  const deleteAllCities = () => {
+    Alert.alert(
+      'Delete all cities',
+      'Are you sure you want to delete all cities?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () => {
+            removeAllCities();
+          },
+          style: 'destructive',
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+  const getCitiesFromStorage = async () => {
+    const myCities = JSON.parse(await AsyncStorage.getItem('citiesToKeep')) || [];
+    setCitiesFromStorage(myCities);
+    console.log('cities from local storage', myCities);
+  };
+  const showId = (id) => {
+    console.log('id', id);
+  };
+  React.useEffect(() => {
+    const timeOut = setTimeout(() => getCitiesFromStorage(), 1000);
+    return () => clearTimeout(timeOut);
+  }, [modalVisible]);
+
   return (
     <View style={styles.container}>
-      <Text>AddCityScreen</Text>
+      <Text>
+        {citiesFromStorage || !!citiesFromStorage?.length ? 'All would shown here' : 'Nice choose'}-{' '}
+        {citiesFromStorage?.length}
+      </Text>
+      <ScrollView showsVerticalScrollIndicator={false} style={stylesCity.scroll}>
+        {citiesFromStorage &&
+          citiesFromStorage.map((item) =>
+            item.map((i) => {
+              return (
+                <Pressable
+                  key={i.id}
+                  style={stylesCity.cityItem}
+                  // onPress={() => navigation.navigate('City', { city: i })}
+                  onPress={() => showId(i.id)}
+                >
+                  <Text style={stylesCity.cityName}>{i.name}</Text>
+                  <Text style={stylesCity.cityName}>{i.country}</Text>
+                  <Text style={stylesCity.cityName}>{i.adminArea}</Text>
+                </Pressable>
+              );
+            })
+          )}
+      </ScrollView>
       {modalVisible && (
         <ModalScreen modalVisible={modalVisible} setModalVisible={setModalVisible} />
       )}
       <View style={styles.buttonPlus}>
-        <CustomButton label="+" radius={40} onPress={addCity} fontSize={20} />
+        <CustomButton
+          label="+"
+          radius={40}
+          onPress={addCity}
+          fontSize={20}
+          backgroundColor="#15F528"
+        />
       </View>
+      {citiesFromStorage &&
+        citiesFromStorage?.length !== 'undefined' &&
+        !!citiesFromStorage?.length && (
+          <View style={styles.buttonLess}>
+            <CustomButton
+              label="Delete all"
+              radius={10}
+              onPress={deleteAllCities}
+              fontSize={20}
+              backgroundColor="#F42707"
+            />
+          </View>
+        )}
     </View>
   );
 };
@@ -35,5 +119,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 70,
     right: 40,
+  },
+  buttonLess: {
+    position: 'absolute',
+    bottom: 70,
+    left: 40,
   },
 });
