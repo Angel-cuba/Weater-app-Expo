@@ -1,13 +1,14 @@
 import { View, Text, StyleSheet } from 'react-native';
-import React from 'react';
+import React, { useContext } from 'react';
 import CustomButton from './CustomButton';
+import { DataContext } from '../../context/DataContext';
 
 const CustomCity = ({ item, addToLocalStorage, setCityId }) => {
   const addCity = (id) => {
     setCityId(id);
     addToLocalStorage();
-    console.log('id from item', id);
   };
+
   return (
     <View style={stylesCity.cityItem}>
       <Text style={stylesCity.cityName}>{item.name}</Text>
@@ -18,7 +19,7 @@ const CustomCity = ({ item, addToLocalStorage, setCityId }) => {
         label="Add"
         radius={6}
         fontSize={12}
-      ></CustomButton>
+      />
     </View>
   );
 };
