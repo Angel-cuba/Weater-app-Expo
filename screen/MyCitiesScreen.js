@@ -43,19 +43,15 @@ console.log('dataCities from localstorage', citiesFromStorage)
     );
   };
   const getCitiesFromStorage = async () => {
-    const myCities = JSON?.parse(await AsyncStorage.getItem('citiesToKeep')) || [];
-    setCitiesFromStorage(myCities[0]);
-    console.log('cities from local storage', myCities[0]);
+    const myCities = JSON.parse(await AsyncStorage.getItem('citiesToKeep')) || [];
+    setCitiesFromStorage(myCities);
   };
   const showId = (id) => {
     console.log('id', id);
   };
   React.useEffect(() => {
-    // const timeOut = setTimeout(() => getCitiesFromStorage(), 1000);
-    // return () => clearTimeout(timeOut);
     getCitiesFromStorage();
   }, [modalVisible]);
-  //modalVisible
 
   return (
     <View style={styles.container}>
@@ -81,7 +77,7 @@ console.log('dataCities from localstorage', citiesFromStorage)
               );
             })
           )}
-      </ScrollView>
+      </ScrollView> 
       {modalVisible && (
         <ModalScreen modalVisible={modalVisible} setModalVisible={setModalVisible} />
       )}

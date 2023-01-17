@@ -10,21 +10,21 @@ const ModalScreen = ({ modalVisible, setModalVisible }) => {
   const [search, setSearch] = React.useState(null);
 
   const [cities, setCities] = React.useState(null);
-  const { dataCities, setDataCities } = useContext(DataContext);
+  const { setDataCities } = useContext(DataContext);
   // console.log('from modal', dataCities)
 
   React.useEffect(() => {
-   if(search) {
-     const timeOut = setTimeout(
-      () =>
-        getData(search, token).then((data) => {
-          setCities(data.locations);
-          setDataCities(data.locations);
-        }),
-      1000
-    );
-    return () => clearTimeout(timeOut);
-   }
+    if (search) {
+      //  const timeOut = setTimeout(
+      // () =>
+      getData(search, token).then((data) => {
+        setCities(data.locations);
+        setDataCities(data.locations);
+      });
+      //   1000
+      // );
+      // return () => clearTimeout(timeOut);
+    }
   }, [search]);
 
   return (

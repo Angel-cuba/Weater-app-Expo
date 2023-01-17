@@ -1,14 +1,12 @@
 import { View, Text, StyleSheet } from 'react-native';
-import React, { useContext } from 'react';
+import React from 'react';
 import CustomButton from './CustomButton';
-import { DataContext } from '../../context/DataContext';
 
 const CustomCity = ({ item, addToLocalStorage, setCityId }) => {
   const addCity = (id) => {
     setCityId(id);
     addToLocalStorage();
   };
-
   return (
     <View style={stylesCity.cityItem}>
       <Text style={stylesCity.cityName}>{item.name}</Text>

@@ -1,36 +1,35 @@
 import { ScrollView, StyleSheet } from 'react-native';
-import React from 'react';
+import React, { useContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomCity from './Custom/CustomCity';
+import { DataContext } from '../context/DataContext';
 
-const City = ({ cities }) => {
+const City = () => {
   const [cityId, setCityId] = React.useState(null);
+  const { dataCities, setDataCities } = useContext(DataContext);
 
-  const citiesToKeep = cities.map((c) => {
-    return {
-      id: c.id,
-      name: c.name,
-      country: c.country,
-      adminArea: c.adminArea,
-    };
-  });
-  console.log('citiesToKeep', citiesToKeep);
-  const filteredCities = citiesToKeep.filter((c) => c.id === cityId);
+  const filteredCities = dataCities?.filter((c) => c.id === cityId);
   console.log('filteredCities', filteredCities);
 
   const addToLocalStorage = async () => {
     const myCities = JSON.parse(await AsyncStorage.getItem('citiesToKeep')) || [];
-    myCities.push(filteredCities);
-    await AsyncStorage.setItem('citiesToKeep', JSON.stringify(myCities));
-    console.log('id', cityId);
+     myCities.push(filteredCities);
+     await AsyncStorage.setItem('citiesToKeep', JSON.stringify(myCities));
+    //  Re-render the list
+    updateData();
   };
   React.useEffect(() => {
     addToLocalStorage();
   }, [cityId]);
 
+    const updateData = () => {
+    const newData = dataCities?.filter((c) => c.id !== cityId);
+    setDataCities(newData);
+  };
+
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.scroll}>
-      {cities.map((item) => {
+      {dataCities?.map((item) => {
         return (
           <CustomCity
             key={item.id}
