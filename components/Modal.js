@@ -1,24 +1,30 @@
 import { View, Text, StyleSheet, Modal } from 'react-native';
-import React from 'react';
+import React, { useContext } from 'react';
 import CustomButton from './Custom/CustomButton';
 import CustomInput from './Custom/CustomInput';
 import { getData, token } from '../data/getCitiesData';
 import City from './City';
+import { DataContext } from '../context/DataContext';
 
 const ModalScreen = ({ modalVisible, setModalVisible }) => {
-  const [search, setSearch] = React.useState('');
+  const [search, setSearch] = React.useState(null);
 
   const [cities, setCities] = React.useState(null);
+  const { dataCities, setDataCities } = useContext(DataContext);
+  // console.log('from modal', dataCities)
 
   React.useEffect(() => {
-    const timeOut = setTimeout(
+   if(search) {
+     const timeOut = setTimeout(
       () =>
         getData(search, token).then((data) => {
           setCities(data.locations);
+          setDataCities(data.locations);
         }),
       1000
     );
     return () => clearTimeout(timeOut);
+   }
   }, [search]);
 
   return (

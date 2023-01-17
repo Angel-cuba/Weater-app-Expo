@@ -1,14 +1,17 @@
 import { View, Text, StyleSheet, Pressable, Modal, Alert, ScrollView } from 'react-native';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import CustomButton from '../components/Custom/CustomButton';
 import ModalScreen from '../components/Modal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { stylesCity } from '../components/Custom/CustomCity';
+import { DataContext } from '../context/DataContext';
 
 const MyCitiesScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [citiesFromStorage, setCitiesFromStorage] = useState(null);
 
+  const { dataCities, setDataCities} = useContext(DataContext)
+console.log('dataCities from localstorage', citiesFromStorage)
   const addCity = () => {
     setModalVisible(!modalVisible);
   };
@@ -40,17 +43,19 @@ const MyCitiesScreen = ({ navigation }) => {
     );
   };
   const getCitiesFromStorage = async () => {
-    const myCities = JSON.parse(await AsyncStorage.getItem('citiesToKeep')) || [];
-    setCitiesFromStorage(myCities);
-    console.log('cities from local storage', myCities);
+    const myCities = JSON?.parse(await AsyncStorage.getItem('citiesToKeep')) || [];
+    setCitiesFromStorage(myCities[0]);
+    console.log('cities from local storage', myCities[0]);
   };
   const showId = (id) => {
     console.log('id', id);
   };
   React.useEffect(() => {
-    const timeOut = setTimeout(() => getCitiesFromStorage(), 1000);
-    return () => clearTimeout(timeOut);
+    // const timeOut = setTimeout(() => getCitiesFromStorage(), 1000);
+    // return () => clearTimeout(timeOut);
+    getCitiesFromStorage();
   }, [modalVisible]);
+  //modalVisible
 
   return (
     <View style={styles.container}>
@@ -60,18 +65,18 @@ const MyCitiesScreen = ({ navigation }) => {
       </Text>
       <ScrollView showsVerticalScrollIndicator={false} style={stylesCity.scroll}>
         {citiesFromStorage &&
-          citiesFromStorage.map((item) =>
-            item.map((i) => {
+          citiesFromStorage?.map((item) =>
+            item?.map((i) => {
               return (
                 <Pressable
-                  key={i.id}
+                  key={i?.id}
                   style={stylesCity.cityItem}
                   // onPress={() => navigation.navigate('City', { city: i })}
                   onPress={() => showId(i.id)}
                 >
-                  <Text style={stylesCity.cityName}>{i.name}</Text>
-                  <Text style={stylesCity.cityName}>{i.country}</Text>
-                  <Text style={stylesCity.cityName}>{i.adminArea}</Text>
+                  <Text style={stylesCity.cityName}>{i?.name}</Text>
+                  <Text style={stylesCity.cityName}>{i?.country}</Text>
+                  <Text style={stylesCity.cityName}>{i?.adminArea}</Text>
                 </Pressable>
               );
             })
