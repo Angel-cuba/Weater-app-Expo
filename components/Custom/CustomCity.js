@@ -26,6 +26,7 @@ export default CustomCity;
 
 export const stylesCity = StyleSheet.create({
   cityItem: {
+    minWidth: 250,
     backgroundColor: 'rgba(5,2,112,0.61)',
     padding: 10,
     margin: 3,
@@ -36,7 +37,7 @@ export const stylesCity = StyleSheet.create({
     fontWeight: 'bold',
   },
   cityCountry: {
-    color: '#FFFFFF',
+    color: '#d3d3d3',
     alignSelf: 'center',
     fontSize: 15,
   },

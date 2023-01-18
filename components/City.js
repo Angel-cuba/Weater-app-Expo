@@ -9,7 +9,6 @@ const City = () => {
   const { dataCities, setDataCities } = useContext(DataContext);
 
   const filteredCities = dataCities?.filter((c) => c.id === cityId);
-  console.log('filteredCities', filteredCities);
 
   const addToLocalStorage = async () => {
     const myCities = JSON.parse(await AsyncStorage.getItem('citiesToKeep')) || [];

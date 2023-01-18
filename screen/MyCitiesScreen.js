@@ -1,17 +1,14 @@
 import { View, Text, StyleSheet, Pressable, Modal, Alert, ScrollView } from 'react-native';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import CustomButton from '../components/Custom/CustomButton';
 import ModalScreen from '../components/Modal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { stylesCity } from '../components/Custom/CustomCity';
-import { DataContext } from '../context/DataContext';
 
 const MyCitiesScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [citiesFromStorage, setCitiesFromStorage] = useState(null);
 
-  const { dataCities, setDataCities} = useContext(DataContext)
-console.log('dataCities from localstorage', citiesFromStorage)
   const addCity = () => {
     setModalVisible(!modalVisible);
   };
@@ -67,12 +64,11 @@ console.log('dataCities from localstorage', citiesFromStorage)
                 <Pressable
                   key={i?.id}
                   style={stylesCity.cityItem}
-                  // onPress={() => navigation.navigate('City', { city: i })}
-                  onPress={() => showId(i.id)}
+                  onPress={() => navigation.navigate('City', { city: i })}
                 >
                   <Text style={stylesCity.cityName}>{i?.name}</Text>
-                  <Text style={stylesCity.cityName}>{i?.country}</Text>
-                  <Text style={stylesCity.cityName}>{i?.adminArea}</Text>
+                  <Text style={stylesCity.cityCountry}>{i?.country}</Text>
+                  <Text style={stylesCity.cityAdmin}>{i?.adminArea}</Text>
                 </Pressable>
               );
             })
